@@ -134,8 +134,11 @@ public class Simulation implements Disposable {
 		explosionMesh.setVertices(vertices);
 		explosionMesh.setIndices(indices);
 
-		explosionModel = ModelBuilder.createFromMesh(explosionMesh, GL20.GL_TRIANGLES, new Material(new BlendingAttribute(
-			GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA), TextureAttribute.createDiffuse(explosionTexture)));
+		ModelBuilder modelBuilder = new ModelBuilder();
+		modelBuilder.part("explosion", explosionMesh, GL20.GL_TRIANGLES,
+			new Material(new BlendingAttribute(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA),
+				TextureAttribute.createDiffuse(explosionTexture))
+		);
 
 		ship = new Ship(shipModel);
 		ship.transform.rotate(0, 1, 0, 180);

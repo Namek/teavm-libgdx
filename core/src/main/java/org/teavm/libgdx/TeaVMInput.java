@@ -66,6 +66,26 @@ public class TeaVMInput implements Input, EventListener {
     }
 
     @Override
+    public float getGyroscopeX() {
+        return 0;
+    }
+
+    @Override
+    public float getGyroscopeY() {
+        return 0;
+    }
+
+    @Override
+    public float getGyroscopeZ() {
+        return 0;
+    }
+
+    @Override
+    public int getMaxPointers() {
+        return 0;
+    }
+
+    @Override
     public int getX() {
         return touchX[0];
     }
@@ -126,8 +146,23 @@ public class TeaVMInput implements Input, EventListener {
     }
 
     @Override
+    public float getPressure() {
+        return 0;
+    }
+
+    @Override
+    public float getPressure(int i) {
+        return 0;
+    }
+
+    @Override
     public boolean isButtonPressed(int button) {
         return button == Buttons.LEFT && touched[0];
+    }
+
+    @Override
+    public boolean isButtonJustPressed(int i) {
+        return false;
     }
 
     @Override
@@ -223,6 +258,21 @@ public class TeaVMInput implements Input, EventListener {
 
     @Override
     public void setCatchMenuKey(boolean catchMenu) {
+    }
+
+    @Override
+    public boolean isCatchMenuKey() {
+        return false;
+    }
+
+    @Override
+    public void setCatchKey(int key, boolean catchKey) {
+        // ??
+    }
+
+    @Override
+    public boolean isCatchKey(int key) {
+        return false;
     }
 
     @Override
@@ -889,10 +939,6 @@ public class TeaVMInput implements Input, EventListener {
     private static final int KEY_BACKSLASH = 220;
     private static final int KEY_CLOSE_BRACKET = 221;
     private static final int KEY_SINGLE_QUOTE = 222;
-
-    @Override
-    public void setCursorImage(Pixmap pixmap, int xHotspot, int yHotspot) {
-    }
 
     @Override
     public void getTextInput(TextInputListener listener, String title, String text, String hint) {

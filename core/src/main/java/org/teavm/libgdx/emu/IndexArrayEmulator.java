@@ -102,6 +102,14 @@ public class IndexArrayEmulator implements IndexData {
         }
     }
 
+    @Override
+    public void updateIndices (int targetOffset, short[] indices, int offset, int count) {
+        final int pos = buffer.position();
+        buffer.position(targetOffset * 2);
+        BufferUtils.copy(indices, offset, buffer, count);
+        buffer.position(pos);
+    }
+
     /**
      * <p>
      * Returns the underlying ShortBuffer. If you modify the buffer contents

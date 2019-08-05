@@ -2,20 +2,12 @@ package org.teavm.libgdx;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.badlogic.gdx.*;
 import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.html.HTMLCanvasElement;
 import org.teavm.jso.JSBody;
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Audio;
-import com.badlogic.gdx.Files;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.LifecycleListener;
-import com.badlogic.gdx.Net;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.Clipboard;
 
 public class TeaVMApplication implements Application {
@@ -159,6 +151,17 @@ public class TeaVMApplication implements Application {
     @Override
     public int getLogLevel() {
         return logLevel;
+    }
+
+    @Override
+    public void setApplicationLogger(ApplicationLogger applicationLogger) {
+        // TODO
+    }
+
+    @Override
+    public ApplicationLogger getApplicationLogger() {
+        // TODO
+        return null;
     }
 
     @Override

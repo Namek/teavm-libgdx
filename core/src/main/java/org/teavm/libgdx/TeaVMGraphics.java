@@ -146,21 +146,6 @@ public class TeaVMGraphics implements Graphics {
     }
 
     @Override
-    public DisplayMode getDesktopDisplayMode() {
-        return getDisplayModes()[0];
-    }
-
-    @Override
-    public boolean setDisplayMode(DisplayMode displayMode) {
-        return false;
-    }
-
-    @Override
-    public boolean setDisplayMode(int width, int height, boolean fullscreen) {
-        return false;
-    }
-
-    @Override
     public void setTitle(String title) {
     }
 

@@ -58,7 +58,6 @@
             <configuration>
               <targetDirectory>${project.build.directory}/generated/teavm</targetDirectory>
               <mainClass>org.teavm.libgdx.invaders.TeaVMLauncher</mainClass>
-              <runtime>SEPARATE</runtime>
               <minifying>true</minifying>
               <debugInformationGenerated>true</debugInformationGenerated>
               <sourceMapsGenerated>true</sourceMapsGenerated>

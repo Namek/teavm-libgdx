@@ -1,14 +1,16 @@
 package org.teavm.libgdx;
 
-import org.teavm.jso.dom.events.*;
-import org.teavm.jso.dom.html.HTMLCanvasElement;
-import org.teavm.jso.dom.html.HTMLDocument;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.IntSet;
+import org.teavm.jso.dom.events.Event;
+import org.teavm.jso.dom.events.EventListener;
+import org.teavm.jso.dom.events.KeyboardEvent;
+import org.teavm.jso.dom.events.MouseEvent;
+import org.teavm.jso.dom.html.HTMLCanvasElement;
+import org.teavm.jso.dom.html.HTMLDocument;
 
 /**
  *
@@ -28,6 +30,7 @@ public class TeaVMInput implements Input, EventListener {
     boolean[] pressedKeys = new boolean[256];
     boolean keyJustPressed = false;
     boolean[] justPressedKeys = new boolean[256];
+    boolean[] justPressedButtons = new boolean[5];
     InputProcessor processor;
     char lastKeyCharPressed;
     float keyRepeatTimer;
@@ -41,28 +44,18 @@ public class TeaVMInput implements Input, EventListener {
     }
 
     void reset() {
-        justTouched = false;
+        if (justTouched) {
+            justTouched = false;
+            for (int i = 0; i < justPressedButtons.length; i++) {
+                justPressedButtons[i] = false;
+            }
+        }
         if (keyJustPressed) {
             keyJustPressed = false;
             for (int i = 0; i < justPressedKeys.length; i++) {
                 justPressedKeys[i] = false;
             }
         }
-    }
-
-    @Override
-    public float getAccelerometerX() {
-        return 0;
-    }
-
-    @Override
-    public float getAccelerometerY() {
-        return 0;
-    }
-
-    @Override
-    public float getAccelerometerZ() {
-        return 0;
     }
 
     @Override
@@ -82,6 +75,37 @@ public class TeaVMInput implements Input, EventListener {
 
     @Override
     public int getMaxPointers() {
+        return 1;
+    }
+
+    @Override
+    public boolean isCatchMenuKey() {
+        return false;
+    }
+
+    @Override
+    public void setCatchKey(int key, boolean catchKey) {
+        // TODO
+    }
+
+    @Override
+    public boolean isCatchKey(int key) {
+        // TODO
+        return false;
+    }
+
+    @Override
+    public float getAccelerometerX() {
+        return 0;
+    }
+
+    @Override
+    public float getAccelerometerY() {
+        return 0;
+    }
+
+    @Override
+    public float getAccelerometerZ() {
         return 0;
     }
 
@@ -161,8 +185,11 @@ public class TeaVMInput implements Input, EventListener {
     }
 
     @Override
-    public boolean isButtonJustPressed(int i) {
-        return false;
+    public boolean isButtonJustPressed(int button) {
+        if (button < 0 || button > justPressedButtons.length) {
+            return false;
+        }
+        return justPressedButtons[button];
     }
 
     @Override
@@ -187,25 +214,9 @@ public class TeaVMInput implements Input, EventListener {
         return justPressedKeys[key];
     }
 
-    /*public void getTextInput(TextInputListener listener, String title, String text, String hint) {
-        TextInputDialogBox dialog = new TextInputDialogBox(title, text, hint);
-        final TextInputListener capturedListener = listener;
-        dialog.setListener(new TextInputDialogListener() {
-            @Override
-            public void onPositive(String text) {
-                if (capturedListener != null) {
-                    capturedListener.input(text);
-                }
-            }
-
-            @Override
-            public void onNegative() {
-                if (capturedListener != null) {
-                    capturedListener.canceled();
-                }
-            }
-        });
-    }*/
+    @Override
+    public void getTextInput(TextInputListener listener, String title, String text, String hint) {
+    }
 
     @Override
     public void setOnscreenKeyboardVisible(boolean visible) {
@@ -261,21 +272,6 @@ public class TeaVMInput implements Input, EventListener {
     }
 
     @Override
-    public boolean isCatchMenuKey() {
-        return false;
-    }
-
-    @Override
-    public void setCatchKey(int key, boolean catchKey) {
-        // ??
-    }
-
-    @Override
-    public boolean isCatchKey(int key) {
-        return false;
-    }
-
-    @Override
     public void setInputProcessor(InputProcessor processor) {
         this.processor = processor;
     }
@@ -326,12 +322,12 @@ public class TeaVMInput implements Input, EventListener {
 
     private float getMovementXJSNI(Event event) {
         // TODO: implement
-        return 0;
+        return ((MouseEvent)event).getScreenX();
     }
 
     private float getMovementYJSNI(Event event) {
         // TODO: implement
-        return 0;
+        return ((MouseEvent)event).getScreenY();
     }
 
     private static boolean isTouchScreen() {
@@ -374,38 +370,24 @@ public class TeaVMInput implements Input, EventListener {
 
     /** Kindly borrowed from PlayN. **/
     protected int getRelativeX(MouseEvent e, HTMLCanvasElement target) {
-        float xScaleRatio = target.getWidth() * 1f / target.getClientWidth();
-        return Math.round(xScaleRatio *
-                (e.getClientX() - target.getAbsoluteLeft() + target.getScrollLeft() + target.getOwnerDocument()
-                        .getScrollLeft()));
+        System.out.println("left " + target.getOffsetHeight() + " " + target.getAbsoluteLeft() + " " + target.getScrollLeft());
+        //float xScaleRatio = target.getWidth() * 1f / target.getClientWidth();
+        return e.getClientX();
+        //Math.round(xScaleRatio *
+                //(e.getClientX() - target.getAbsoluteLeft() + target.getScrollLeft() + target.getOwnerDocument()
+                 //       .getScrollLeft()));
     }
 
     /** Kindly borrowed from PlayN. **/
     protected int getRelativeY(MouseEvent e, HTMLCanvasElement target) {
-        float yScaleRatio = target.getHeight() * 1f / target.getClientHeight();
-        return Math.round(yScaleRatio *
-                (e.getClientY() - target.getAbsoluteTop() + target.getScrollTop() + target.getOwnerDocument()
-                        .getScrollTop()));
-    }
-/*
-    protected int getRelativeX(Touch touch, HTMLCanvasElement target) {
-        float xScaleRatio = target.getWidth() * 1f / target.getClientWidth(); // Correct
-                                                                              // for
-                                                                              // canvas
-                                                                              // CSS
-                                                                              // scaling
-        return Math.round(xScaleRatio * touch.getRelativeX(target));
+        System.out.println("right " + target.getAbsoluteTop());
+        //float yScaleRatio = target.getHeight() * 1f / target.getClientHeight();
+        return e.getClientY();
+        //Math.round(yScaleRatio *
+                //(e.getClientY() - target.getAbsoluteTop() + target.getScrollTop() + target.getOwnerDocument()
+                     //   .getScrollTop()));
     }
 
-    protected int getRelativeY(Touch touch, CanvasElement target) {
-        float yScaleRatio = target.getHeight() * 1f / target.getClientHeight(); // Correct
-                                                                                // for
-                                                                                // canvas
-                                                                                // CSS
-                                                                                // scaling
-        return Math.round(yScaleRatio * touch.getRelativeY(target));
-    }
-*/
     private void hookEvents() {
         HTMLDocument document = canvas.getOwnerDocument();
         canvas.addEventListener("mousedown", this, true);
@@ -423,7 +405,6 @@ public class TeaVMInput implements Input, EventListener {
         canvas.addEventListener("touchmove", this);
         canvas.addEventListener("touchcancel", this);
         canvas.addEventListener("touchend", this);
-
     }
 
     private int getButton(int button) {
@@ -551,7 +532,6 @@ public class TeaVMInput implements Input, EventListener {
         }
 
         if (e.getType().equals("keyup") && hasFocus) {
-            // System.out.println("keyup");
             KeyboardEvent keyEvent = (KeyboardEvent)e;
             int code = keyForCode(keyEvent.getKeyCode());
             if (pressedKeys[code]) {
@@ -940,7 +920,4 @@ public class TeaVMInput implements Input, EventListener {
     private static final int KEY_CLOSE_BRACKET = 221;
     private static final int KEY_SINGLE_QUOTE = 222;
 
-    @Override
-    public void getTextInput(TextInputListener listener, String title, String text, String hint) {
-    }
 }

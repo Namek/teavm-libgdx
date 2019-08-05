@@ -114,6 +114,11 @@ public class TeaVMControllers implements ControllerManager, GamepadSupportListen
     }
 
     @Override
+    public Array<ControllerListener> getListeners() {
+        return listeners;
+    }
+
+    @Override
     public void onGamepadConnected(int index) {
         Gamepad gamepad = GamepadSupport.getGamepad(index);
         TeaVMController controller = new TeaVMController(gamepad.getIndex(), gamepad.getId());

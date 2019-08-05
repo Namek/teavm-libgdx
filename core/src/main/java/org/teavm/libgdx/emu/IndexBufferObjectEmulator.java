@@ -1,16 +1,17 @@
 package org.teavm.libgdx.emu;
 
-import java.nio.ShortBuffer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.glutils.IndexArray;
+import com.badlogic.gdx.graphics.glutils.IndexBufferObject;
 import com.badlogic.gdx.graphics.glutils.IndexData;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import org.teavm.libgdx.plugin.Annotations.Replace;
 
-@Replace(IndexArray.class)
-public class IndexArrayEmulator implements IndexData {
+import java.nio.ShortBuffer;
+
+@Replace(IndexBufferObject.class)
+public class IndexBufferObjectEmulator implements IndexData {
     ShortBuffer buffer;
     int bufferHandle;
     final boolean isDirect;
@@ -26,7 +27,7 @@ public class IndexArrayEmulator implements IndexData {
      * @param maxIndices
      *            the maximum number of indices this buffer can hold
      */
-    public IndexArrayEmulator(boolean isStatic, int maxIndices) {
+    public IndexBufferObjectEmulator(boolean isStatic, int maxIndices) {
         isDirect = true;
         buffer = BufferUtils.newShortBuffer(maxIndices);
         buffer.flip();
@@ -40,12 +41,17 @@ public class IndexArrayEmulator implements IndexData {
      * @param maxIndices
      *            the maximum number of indices this buffer can hold
      */
-    public IndexArrayEmulator(int maxIndices) {
+    public IndexBufferObjectEmulator(int maxIndices) {
         this.isDirect = true;
         buffer = BufferUtils.newShortBuffer(maxIndices);
         buffer.flip();
         bufferHandle = Gdx.gl20.glGenBuffer();
         usage = GL20.GL_STATIC_DRAW;
+    }
+
+    @Override
+    public void updateIndices(int targetOffset, short[] indices, int offset, int count) {
+
     }
 
     /** @return the number of indices currently stored in this buffer */
@@ -103,14 +109,6 @@ public class IndexArrayEmulator implements IndexData {
             Gdx.gl20.glBufferData(GL20.GL_ELEMENT_ARRAY_BUFFER, buffer.limit(), buffer, usage);
             isDirty = false;
         }
-    }
-
-    @Override
-    public void updateIndices (int targetOffset, short[] indices, int offset, int count) {
-        final int pos = buffer.position();
-        buffer.position(targetOffset * 2);
-        BufferUtils.copy(indices, offset, buffer, count);
-        buffer.position(pos);
     }
 
     /**

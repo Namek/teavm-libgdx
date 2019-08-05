@@ -11,16 +11,29 @@
  * governing permissions and limitations under the License.
  */
 
-package com.badlogic.invaders.simulation;
+package com.badlogic.invaders.simulation
 
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.graphics.g3d.Model
+import com.badlogic.gdx.graphics.g3d.ModelInstance
+import com.badlogic.gdx.math.Vector3
 
-public class Block extends ModelInstance {
-	public final static float BLOCK_RADIUS = 0.5f;
+class Ship(model: Model) : ModelInstance(model) {
+    var lives = 3
+    var isExploding = false
+    var explodeTime = 0f
 
-	public Block (Model model, float x, float y, float z) {
-		super(model, x, y, z);
-	}
+    fun update(delta: Float) {
+        if (isExploding) {
+            explodeTime += delta
+            if (explodeTime > Explosion.EXPLOSION_LIVE_TIME) {
+                isExploding = false
+                explodeTime = 0f
+            }
+        }
+    }
+
+    companion object {
+        val SHIP_RADIUS = 1f
+        val SHIP_VELOCITY = 20f
+    }
 }

@@ -11,10 +11,10 @@
  * governing permissions and limitations under the License.
  */
 
-package com.badlogic.invaders.simulation;
+package com.badlogic.invaders.simulation
 
-public interface SimulationListener {
-	public void explosion ();
+interface SimulationListener {
+    fun explosion()
 
-	public void shot ();
+    fun shot()
 }

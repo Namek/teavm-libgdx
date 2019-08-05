@@ -336,7 +336,7 @@ public class TeaVMInput implements Input, EventListener {
 
     /** Kindly borrowed from PlayN. **/
     protected int getRelativeX(MouseEvent e, HTMLCanvasElement target) {
-        System.out.println("left " + target.getOffsetHeight() + " " + target.getAbsoluteLeft() + " " + target.getScrollLeft());
+//        System.out.println("left " + target.getOffsetHeight() + " " + target.getAbsoluteLeft() + " " + target.getScrollLeft());
         //float xScaleRatio = target.getWidth() * 1f / target.getClientWidth();
         return e.getClientX();
         //Math.round(xScaleRatio *
@@ -346,7 +346,7 @@ public class TeaVMInput implements Input, EventListener {
 
     /** Kindly borrowed from PlayN. **/
     protected int getRelativeY(MouseEvent e, HTMLCanvasElement target) {
-        System.out.println("right " + target.getAbsoluteTop());
+//        System.out.println("right " + target.getAbsoluteTop());
         //float yScaleRatio = target.getHeight() * 1f / target.getClientHeight();
         return e.getClientY();
         //Math.round(yScaleRatio *

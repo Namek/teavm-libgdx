@@ -61,7 +61,7 @@ public class PixmapEmulator implements Disposable {
     float a;
     String color = make(r, g, b, a);
     static String clearColor = make(255, 255, 255, 1.0f);
-    static Blending blending;
+    private Blending blending;
     Uint8ClampedArray pixels;
     private ByteBuffer pixelsBuffer;
 
@@ -106,18 +106,18 @@ public class PixmapEmulator implements Disposable {
         return "rgba(" + r2 + "," + g2 + "," + b2 + "," + a2 + ")";
     }
 
-    public static void setBlending(Blending blending) {
-        PixmapEmulator.blending = blending;
+    public void setBlending(Blending blending) {
+        this.blending = blending;
         for (PixmapEmulator pixmap : pixmaps.values()) {
             pixmap.context.setGlobalCompositeOperation("source-over");
         }
     }
 
-    public static Blending getBlending() {
+    public Blending getBlending() {
         return blending;
     }
 
-    public static void setFilter(@SuppressWarnings("unused") Filter filter) {
+    public void setFilter(@SuppressWarnings("unused") Filter filter) {
     }
 
     public Format getFormat() {

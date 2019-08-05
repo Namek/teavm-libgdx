@@ -77,11 +77,12 @@ public class TeaVMApplication implements Application {
         graphics.update();
         graphics.frameId++;
 
-        for (int i = 0; i < runnables.size; ++i) {
+        int n = runnables.size;
+        for (int i = 0; i < n; ++i) {
             runnables.get(i).run();
         }
+        runnables.removeRange(0, n - 1);
 
-        runnables.clear();
         if(lastWidth != canvas.getWidth() || lastHeight != canvas.getHeight()) {
             listener.resize(canvas.getWidth(), canvas.getHeight());
             lastWidth = canvas.getWidth();

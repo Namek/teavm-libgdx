@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.teavm.common.Mapper;
-import org.teavm.diagnostics.Diagnostics;
 import org.teavm.libgdx.emu.*;
 import org.teavm.model.*;
 import org.teavm.model.instructions.*;
@@ -30,8 +28,12 @@ import org.teavm.model.util.ModelUtils;
 import org.teavm.parsing.ClassRefsRenamer;
 
 public class OverlayTransformer implements ClassHolderTransformer {
+    ReferenceCache referenceCache = new ReferenceCache();
+
     @Override
-    public void transformClass(ClassHolder cls, ClassReaderSource innerSource, Diagnostics diagnostics) {
+    public void transformClass(ClassHolder cls, ClassHolderTransformerContext ctx) {
+        ClassReaderSource innerSource = ctx.getHierarchy().getClassSource();
+
         if (cls.getName().equals(BufferUtils.class.getName())) {
             transformBufferUtils(cls, innerSource);
         } else if (cls.getName().equals(TextureData.Factory.class.getName())) {
@@ -171,7 +173,7 @@ public class OverlayTransformer implements ClassHolderTransformer {
     }
 
     private void replaceClass(final ClassHolder cls, final ClassReader emuCls) {
-        ClassRefsRenamer renamer = new ClassRefsRenamer(preimage ->
+        ClassRefsRenamer renamer = new ClassRefsRenamer(referenceCache, preimage ->
                 preimage.equals(emuCls.getName()) ? cls.getName() : preimage);
         for (FieldHolder field : cls.getFields().toArray(new FieldHolder[0])) {
             cls.removeField(field);

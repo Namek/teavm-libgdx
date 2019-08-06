@@ -1,7 +1,9 @@
 package org.teavm.libgdx.plugin;
 
+import com.badlogic.gdx.math.Matrix4;
 import org.reflections.Reflections;
 import org.teavm.diagnostics.Diagnostics;
+import org.teavm.libgdx.emu.Matrix4Emulator;
 import org.teavm.libgdx.plugin.Annotations.Emulate;
 import org.teavm.libgdx.plugin.Annotations.Replace;
 import org.teavm.model.*;
@@ -46,14 +48,18 @@ public class OverlayTransformer implements ClassHolderTransformer {
                 System.out.println("Emulating " + cls.getName());
                 Class<?> emulated = emulations.get(cls.getName());
                 List<MethodDescriptor> descList = new ArrayList<>();
-                for(Method method : emulated.getDeclaredMethods()){
+                for (Method method : emulated.getDeclaredMethods()) {
                     Class[] classes = new Class[method.getParameterTypes().length + 1];
+
+                    System.out.println("  method " + method.getName());
+
                     classes[classes.length-1] = method.getReturnType();
                     System.arraycopy(method.getParameterTypes(), 0, classes, 0, method.getParameterTypes().length);
                     descList.add(new MethodDescriptor(method.getName(), classes));
                 }
                 replaceMethods(cls, emulated, innerSource, descList);
-            }else if(replacements.containsKey(cls.getName())){
+            }
+            else if (replacements.containsKey(cls.getName())) {
                 System.out.println("Replacing " + cls.getName());
                 Class<?> emulated = replacements.get(cls.getName());
                 replaceClass(cls, innerSource.get(emulated.getName()));
@@ -78,16 +84,41 @@ public class OverlayTransformer implements ClassHolderTransformer {
         ClassRefsRenamer renamer = new ClassRefsRenamer(referenceCache, preimage ->
                 preimage.equals(emuCls.getName()) ? cls.getName() : preimage);
         for (FieldHolder field : cls.getFields().toArray(new FieldHolder[0])) {
+            if (cls.getName().contains("Matrix4"))
+                System.out.println("  field rem " + field.getName());
+
             cls.removeField(field);
         }
         for (MethodHolder method : cls.getMethods().toArray(new MethodHolder[0])) {
+            if (cls.getName().contains("Matrix4"))
+                System.out.println("  method rem " + method.getName());
             cls.removeMethod(method);
         }
         for (FieldReader field : emuCls.getFields()) {
+            if (cls.getName().contains("Matrix4"))
+                System.out.println("  field add " + field.getName());
+
             cls.addField(ModelUtils.copyField(field));
         }
         for (MethodReader method : emuCls.getMethods()) {
+            Matrix4 m;
+            if (cls.getName().contains("Matrix4"))
+                System.out.println("  method add " + method.getName());
             cls.addMethod(renamer.rename(ModelUtils.copyMethod(method)));
         }
+    }
+
+    private void transformMatrix(ClassHolder cls, ClassReaderSource innerSource) {
+        List<MethodDescriptor> descList = new ArrayList<>();
+        descList.add(new MethodDescriptor("inv", float[].class, boolean.class));
+        descList.add(new MethodDescriptor("mul", float[].class, float[].class, void.class));
+        descList.add(new MethodDescriptor("prj", float[].class, float[].class, int.class, int.class, int.class,
+                void.class));
+        replaceMethods(cls, Matrix4Emulator.class, innerSource, descList);
+        ClassReader emuClass = innerSource.get(Matrix4Emulator.class.getName());
+        cls.addMethod(ModelUtils.copyMethod(emuClass.getMethod(new MethodDescriptor("matrix4_det", float[].class,
+                float.class))));
+        cls.addMethod(ModelUtils.copyMethod(emuClass.getMethod(new MethodDescriptor("matrix4_proj", float[].class,
+                float[].class, int.class, void.class))));
     }
 }

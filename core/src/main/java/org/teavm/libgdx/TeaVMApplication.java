@@ -81,7 +81,8 @@ public class TeaVMApplication implements Application {
         for (int i = 0; i < n; ++i) {
             runnables.get(i).run();
         }
-        runnables.removeRange(0, n - 1);
+        if (n > 0)
+            runnables.removeRange(0, n - 1);
 
         if(lastWidth != canvas.getWidth() || lastHeight != canvas.getHeight()) {
             listener.resize(canvas.getWidth(), canvas.getHeight());

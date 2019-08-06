@@ -84,7 +84,7 @@ public class OverlayTransformer implements ClassHolderTransformer {
             cls.removeMethod(method);
         }
         for (FieldReader field : emuCls.getFields()) {
-            cls.addField(ModelUtils.copyField(field));
+            cls.addField(renamer.rename(ModelUtils.copyField(field)));
         }
         for (MethodReader method : emuCls.getMethods()) {
             cls.addMethod(renamer.rename(ModelUtils.copyMethod(method)));

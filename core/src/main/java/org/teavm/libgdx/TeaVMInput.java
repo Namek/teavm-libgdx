@@ -74,7 +74,23 @@ public class TeaVMInput implements Input, EventListener {
     }
 
     @Override
+    public int getMaxPointers() {
+        return 1;
+    }
+
+    @Override
     public boolean isCatchMenuKey() {
+        return false;
+    }
+
+    @Override
+    public void setCatchKey(int key, boolean catchKey) {
+        // TODO
+    }
+
+    @Override
+    public boolean isCatchKey(int key) {
+        // TODO
         return false;
     }
 
@@ -154,8 +170,26 @@ public class TeaVMInput implements Input, EventListener {
     }
 
     @Override
+    public float getPressure() {
+        return 0;
+    }
+
+    @Override
+    public float getPressure(int i) {
+        return 0;
+    }
+
+    @Override
     public boolean isButtonPressed(int button) {
         return button == Buttons.LEFT && touched[0];
+    }
+
+    @Override
+    public boolean isButtonJustPressed(int button) {
+        if (button < 0 || button > justPressedButtons.length) {
+            return false;
+        }
+        return justPressedButtons[button];
     }
 
     @Override

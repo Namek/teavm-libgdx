@@ -1,3 +1,9 @@
+# What?
+
+An attempt to build HTML5 games using TeaVM (bytecode compiler) instead of Google Web Toolkit (Java compiler). This enables coding in Kotlin or any JVM alternative.
+
+See https://namek.github.io/teavm-libgdx/ for complete list of ported games, originally made as libgdx demos.
+
 # libgdx invaders demo
 
 ![invaders](/demos/invaders/screenshot.jpg "Invaders")

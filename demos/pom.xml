@@ -10,8 +10,36 @@
   <artifactId>teavm-libgdx-demos</artifactId>
   <packaging>pom</packaging>
 
-  <modules>
-    <module>invaders</module>
-    <module>superjumper</module>
-  </modules>
+  <profiles>
+    <profile>
+      <id>all-games</id>
+      <modules>
+        <module>invaders</module>
+        <module>superjumper</module>
+      </modules>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+
+    <profile>
+      <id>invaders</id>
+      <modules>
+        <module>invaders</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>superjumper</id>
+      <modules>
+        <module>superjumper</module>
+      </modules>
+    </profile>
+  </profiles>
+
+
+<!--  <modules>-->
+<!--    <module>invaders</module>-->
+<!--    <module>superjumper</module>-->
+<!--  </modules>-->
 </project>

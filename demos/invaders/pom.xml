@@ -10,8 +10,26 @@
   <artifactId>teavm-libgdx-invaders</artifactId>
   <packaging>pom</packaging>
 
-  <modules>
-    <module>core</module>
-    <module>webapp</module>
-  </modules>
+  <profiles>
+    <profile>
+      <id>all-platforms</id>
+      <modules>
+        <module>core</module>
+        <module>webapp</module>
+      </modules>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+    <profile>
+      <id>desktop</id>
+    </profile>
+    <profile>
+      <id>webapp</id>
+      <modules>
+        <module>core</module>
+        <module>webapp</module>
+      </modules>
+    </profile>
+  </profiles>
 </project>

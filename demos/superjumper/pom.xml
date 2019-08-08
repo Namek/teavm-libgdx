@@ -12,6 +12,7 @@
 
   <modules>
     <module>core</module>
+    <module>desktop</module>
     <module>webapp</module>
   </modules>
 </project>

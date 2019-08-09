@@ -15,6 +15,7 @@
       <id>all-platforms</id>
       <modules>
         <module>core</module>
+        <module>desktop</module>
         <module>webapp</module>
       </modules>
       <activation>
@@ -23,6 +24,10 @@
     </profile>
     <profile>
       <id>desktop</id>
+      <modules>
+        <module>core</module>
+        <module>desktop</module>
+      </modules>
     </profile>
     <profile>
       <id>webapp</id>

@@ -23,6 +23,7 @@ Official build made with GWT can be found here -> https://libgdx.badlogicgames.c
     mvn package -P superjumper,webapp
     mvn package -P invaders
     mvn package -P invaders,webapp
+    mvn package -P invaders,desktop
 
 # Credits
 
